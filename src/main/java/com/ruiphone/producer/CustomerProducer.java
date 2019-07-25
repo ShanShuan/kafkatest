@@ -39,7 +39,7 @@ public class CustomerProducer {
           //自定义分区
 //          props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,"com.ruiphone.producer.CustomerPartitioner");
           //创建生成者对象
-          KafkaProducer<String, String> stringStringKafkaProducer = new KafkaProducer<>(props);
+          KafkaProducer<String, String> stringStringKafkaProducer = new KafkaProducer<String,String>(props);
             for (int i = 0; i <9 ; i++) {
                 System.out.println(i+";;");
                 stringStringKafkaProducer.send(new ProducerRecord<String, String>("hello", String.valueOf(i)), new Callback() {
