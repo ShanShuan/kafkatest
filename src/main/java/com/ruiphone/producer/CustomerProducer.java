@@ -2,6 +2,8 @@ package com.ruiphone.producer;
 
 
 import org.apache.kafka.clients.producer.*;
+
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -31,13 +33,17 @@ public class CustomerProducer {
           //KV  的 序列化类
           props.put("key.serializer", "org.apache.kafka.common.serialization.StringSerializer");
           props.put("value.serializer", "org.apache.kafka.common.serialization.StringSerializer");
+
+          //拦截器
+          props.put(ProducerConfig.INTERCEPTOR_CLASSES_CONFIG, Arrays.asList("com.ruiphone.producer.intercetor.TimeIntercetor","com.ruiphone.producer.intercetor.CountInterceptor"));
           //自定义分区
 //          props.put(ProducerConfig.PARTITIONER_CLASS_CONFIG,"com.ruiphone.producer.CustomerPartitioner");
           //创建生成者对象
-          KafkaProducer<String, String> stringStringKafkaProducer = new KafkaProducer<String, String>(props);
+          KafkaProducer<String, String> stringStringKafkaProducer = new KafkaProducer<>(props);
             for (int i = 0; i <9 ; i++) {
                 System.out.println(i+";;");
                 stringStringKafkaProducer.send(new ProducerRecord<String, String>("hello", String.valueOf(i)), new Callback() {
+                    @Override
                     public void onCompletion(RecordMetadata metadata, Exception exception) {
                         if(exception==null){
                             System.out.println("partition:"+metadata.partition()+"-- offset:"+metadata.offset());
